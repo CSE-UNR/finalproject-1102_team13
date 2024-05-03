@@ -2,6 +2,7 @@
 //Date:
 //Purpose:Erinstagram
 
+//Insert comments: 
 
 #include<stdio.h>
 
