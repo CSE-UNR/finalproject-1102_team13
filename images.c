@@ -8,9 +8,9 @@
 
 #define MAXSIZE 500
 
-void Dim(int(*)[MAXSIZE], int*(*)[MAXSIZE], int, int);
-void Brighten(int(*)[MAXSIZE], int*(*)[MAXSIZE], int, int);
-void Crop(int(*)[MAXSIZE], int*(*)[MAXSIZE], int, int, int*, int*, int, int, int, int);
+void Dim(int(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int);
+void Brighten(int(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int);
+void Crop(int(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int, int*, int*, int, int, int, int);
 void getCropNums(int(*)[MAXSIZE], int, int, int*, int*, int*, int*);
 
 
@@ -18,7 +18,7 @@ void getCropNums(int(*)[MAXSIZE], int, int, int*, int*, int*, int*);
 int main(){
 	
 char userschoice, userschoice2;
-int imageArray[][MAXSIZE];
+int imageArray[MAXSIZE][MAXSIZE];
 int colSize, rowSize;
 
 do{
@@ -36,26 +36,29 @@ do{
 
 
   else if(userschoice = '3'){
-  // edit image
+  // edit image'
+    
+    int newArray[MAXSIZE][MAXSIZE];
+    
     printf("\nChoose an option:\n[1] Brighten your image\n[2] Dim your image\n[3] crop your image\n\nEnter your option: ");
-    scanf(" %c", &userchoice2);
+    scanf(" %c", &userschoice2);
    
     if(userschoice2 = '1'){
 	// brighten
-	Brighten(imageArray[][colSize], &newArray[][colSize], rowSize, colSize);
+	Brighten(imageArray, &newArray, rowSize, colSize);
     }
       
     else if(userschoice2 = '2'){
 	// dim
-	Dim(imageArray[][colSize], &newArray[][colSize], rowSize, colSize);
+	Dim(imageArray, &newArray, rowSize, colSize);
     }
 
     else if(userschoice2 = '3'){
 	// crop
-	int hcrop1, hcrop2, vcrop1, vcrop2;
-	int newArray[][colSize];
-	getCropNums(imageArray[][colSize], rowSize, colSize, &hcrop1, &hcrop2, &crop1, &vcrop2);
-	Crop(imageArray[][colSize], &newArray[][colSize], rowSize, colSize, &newRowSize, &newColSize, hcrop1, hcrop2, vcrop1, vcrop2);
+	int hcrop1, hcrop2, vcrop1, vcrop2, newRowSize, newColSize;
+	int newArray[rowSize][colSize];
+	getCropNums(imageArray, rowSize, colSize, &hcrop1, &hcrop2, &vcrop1, &vcrop2);
+	Crop(imageArray, &newArray, rowSize, colSize, &newRowSize, &newColSize, hcrop1, hcrop2, vcrop1, vcrop2);
     }
 
     else{
@@ -82,7 +85,7 @@ do{
 	  
 
   else{
-    printf("\nError: invalid option);
+    printf("\nError: invalid option");
     userschoice = '4';
   }
 }
@@ -138,7 +141,7 @@ void getCropNums(int imageArray[][MAXSIZE], int rowSize, int colSize, int *hcrop
 
 
 
-void Dim(int imageArray[][MAXSIZE], int *newArray[][MAXSIZE], int rowSize, int colSize){
+void Dim(int imageArray[][MAXSIZE], int (*newArrayPtr)[MAXSIZE][MAXSIZE], int rowSize, int colSize){
 
 	for(int row_i = 0; row_i < rowSize; row_i++){
 		for(int col_i = 0; col_i < colSize; col_i++){
@@ -146,13 +149,13 @@ void Dim(int imageArray[][MAXSIZE], int *newArray[][MAXSIZE], int rowSize, int c
 			if(new_brightness < 0){
 				new_brightness = 0;
 			}
-			*newArray[row_i][col_i] = new_brightness;
+			*newArrayPtr[row_i][col_i] = new_brightness;
 		}
 	}
 
 }
 
-void Brighten(int imageArray[][MAXSIZE], int *newArray[][MAXSIZE], int rowSize, int colSize){
+void Brighten(int imageArray[][MAXSIZE], int (*newArrayPtr)[MAXSIZE][MAXSIZE], int rowSize, int colSize){
 
 	for(int row_i = 0; row_i < rowSize; row_i++){
 		for(int col_i = 0; col_i < colSize; col_i++){
@@ -160,13 +163,13 @@ void Brighten(int imageArray[][MAXSIZE], int *newArray[][MAXSIZE], int rowSize, 
 			if(new_brightness > 4){
 				new_brightness = 4;
 			}
-			*newArray[row_i][col_i] = new_brightness;
+			*newArrayPtr[row_i][col_i] = new_brightness;
 		}
 	}
 
 }
 
-void Crop(int imageArray[][MAXSIZE], int *newArrayPtr[][MAXSIZE], int rowSize, int colSize, int *newRowSizePtr, int *newColSizePtr, int h1, int h2, int v1, int v2){
+void Crop(int imageArray[][MAXSIZE], int (*newArrayPtr)[MAXSIZE][MAXSIZE], int rowSize, int colSize, int *newRowSizePtr, int *newColSizePtr, int h1, int h2, int v1, int v2){
 	// h1 and h2 = horizontal locations to crop. h1 is the smaller int
 	// v1 and v2 = vertical locations to crop. v1 is the smaller int
 	
@@ -185,15 +188,3 @@ void Crop(int imageArray[][MAXSIZE], int *newArrayPtr[][MAXSIZE], int rowSize, i
 	*newColSizePtr = newColSize;	
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
