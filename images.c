@@ -1,11 +1,17 @@
-//Authors: Uvensis Martinez, 
+//Authors: Uvensis Martinez, Kaitlyn Rouse
 //Date:
-//Purpose:Erinstagram
+//Purpose: Erinstagram <3
 
 //Insert comments: 
 
 #include<stdio.h>
 
+#define MAXSIZE 500
+
+void Dim(int(*)[MAXSIZE], int*(*)[MAXSIZE], int, int);
+void Brighten(int(*)[MAXSIZE], int*(*)[MAXSIZE], int, int);
+void Crop(int(*)[MAXSIZE], int*(*)[MAXSIZE], int, int, int*, int*, int, int, int, int);
+void getCropNums(int(*)[MAXSIZE], int, int, int*, int*, int*, int*);
 
 
 
@@ -41,6 +47,8 @@ do{
 
     else if(userschoice2 = '3'){
       // crop
+      // getCropNums(int imageArray[][MAXSIZE], rowSize, colSize, &hcrop1, &hcrop2, &crop1, &vcrop2)
+      // Crop(inputArray[][MAXSIZE], &newArray[][MAXSIZE], rowSize, colSize, &newRowSize, &newColSize, hcrop1, hcrop2, vcrop1, vcrop2)
     }
 
     else{
@@ -67,6 +75,101 @@ while(userschoice != '4');
 
 return 0;
 }
+
+
+void getCropNums(int imageArray[][MAXSIZE], int rowSize, int colSize, int *hcrop1Ptr, int *hcrop2Ptr, int *vcrop1Ptr, int *vcrop2Ptr){
+	int hcrop1, hcrop2, vcrop1, vcrop2;
+	do{
+		printf("\nFor the horizontal crop, enter the numbers corresponding to the sections you want to crop off. If you don't want to crop horizontally, just enter 0 and %d", rowSize+1);
+		printf("\nEnter your first number: ");
+		scanf("%d", &hcrop1);
+		printf("\nEnter your second number: ");
+		scanf("%d", &hcrop2);
+	
+		if(hcrop1 > hcrop2){
+			int smallerhcrop = hcrop2;
+			hcrop2 = hcrop1;
+			hcrop1 = smallerhcrop;
+		}
+		if(hcrop2 > rowSize + 1 || hcrop1 < 0){
+			printf("\nError: your selections are not within the boundaries of 0 and %d", rowSize+1);
+		}
+	}	
+	while(hcrop2 > rowSize + 1 || hcrop1 < 0);
+
+	do{
+		printf("\nFor the vertical crop, enter the numbers corresponding to the sections you want to crop off. If you don't want to crop horizontally, just enter 0 and %d", colSize+1);
+		printf("\nEnter your first number: ");
+		scanf("%d", &vcrop1);
+		printf("\nEnter your second number: ");
+		scanf("%d", &vcrop2);
+		if(vcrop1 > vcrop2){
+			int smallervcrop = vcrop2;
+			vcrop2 = vcrop1;
+			vcrop1 = smallervcrop;
+		}
+		if(vcrop2 > colSize + 1 || vcrop1 < 0){
+			printf("\nError: your selections are not within the boundaries of 0 and %d", colSize+1);
+		}
+	}	
+	while(vcrop2 > colSize + 1 || vcrop1 < 0);
+	*hcrop1Ptr = hcrop1;
+	*hcrop2Ptr = hcrop2;
+	*vcrop1Ptr = vcrop1;
+	*vcrop2Ptr = vcrop2;
+}
+
+
+
+
+void Dim(int imageArray[][MAXSIZE], int *newArray[][MAXSIZE], int rowSize, int colSize){
+
+	for(int row_i = 0; row_i < rowSize; row_i++){
+		for(int col_i = 0; col_i < colSize; col_i++){
+			int new_brightness = imageArray[row_i][col_i] - 1;
+			if(new_brightness < 0){
+				new_brightness = 0;
+			}
+			*newArray[row_i][col_i] = new_brightness;
+		}
+	}
+
+}
+
+void Brighten(int imageArray[][MAXSIZE], int *newArray[][MAXSIZE], int rowSize, int colSize){
+
+	for(int row_i = 0; row_i < rowSize; row_i++){
+		for(int col_i = 0; col_i < colSize; col_i++){
+			int new_brightness = imageArray[row_i][col_i] + 1;
+			if(new_brightness > 4){
+				new_brightness = 4;
+			}
+			*newArray[row_i][col_i] = new_brightness;
+		}
+	}
+
+}
+
+void Crop(int imageArray[][MAXSIZE], int *newArrayPtr[][MAXSIZE], int rowSize, int colSize, int *newRowSizePtr, int *newColSizePtr, int h1, int h2, int v1, int v2){
+	// h1 and h2 = horizontal locations to crop. h1 is the smaller int
+	// v1 and v2 = vertical locations to crop. v1 is the smaller int
+	
+	int newColSize, newRowSize = 0;
+	
+	for(int rowindex = v1; rowindex <= v2; rowindex++){
+		for(int colindex = h1; colindex <= h2 ; colindex++){
+			int newval = imageArray[rowindex][colindex];
+			*newArrayPtr[rowindex-v1][colindex-h1] = newval;
+			newColSize++;
+		}
+		newRowSize++;
+	}
+	
+	*newRowSizePtr = newRowSize;
+	*newColSizePtr = newColSize;	
+
+}
+
 
 
 
