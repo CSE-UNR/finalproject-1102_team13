@@ -16,7 +16,10 @@ void getCropNums(int(*)[MAXSIZE], int, int, int*, int*, int*, int*);
 
 
 int main(){
-char userschoice;
+	
+char userschoice, userschoice2;
+int imageArray[][MAXSIZE];
+int colSize, rowSize;
 
 do{
   printf("\nWelcome to Erinstagram\n");
@@ -30,44 +33,57 @@ do{
     printf("\nThank you for choosing Erinstagram\n");
     printf("\nGoodbye!\n");
   }
-  
+
+
   else if(userschoice = '3'){
   // edit image
-    char userschoice2;
     printf("\nChoose an option:\n[1] Brighten your image\n[2] Dim your image\n[3] crop your image\n\nEnter your option: ");
     scanf(" %c", &userchoice2);
    
     if(userschoice2 = '1'){
-      // brighten
+	// brighten
+	Brighten(imageArray[][colSize], &newArray[][colSize], rowSize, colSize);
     }
       
     else if(userschoice2 = '2'){
-      // dim
+	// dim
+	Dim(imageArray[][colSize], &newArray[][colSize], rowSize, colSize);
     }
 
     else if(userschoice2 = '3'){
-      // crop
-      // getCropNums(int imageArray[][MAXSIZE], rowSize, colSize, &hcrop1, &hcrop2, &crop1, &vcrop2)
-      // Crop(inputArray[][MAXSIZE], &newArray[][MAXSIZE], rowSize, colSize, &newRowSize, &newColSize, hcrop1, hcrop2, vcrop1, vcrop2)
+	// crop
+	int hcrop1, hcrop2, vcrop1, vcrop2;
+	int newArray[][colSize];
+	getCropNums(imageArray[][colSize], rowSize, colSize, &hcrop1, &hcrop2, &crop1, &vcrop2);
+	Crop(imageArray[][colSize], &newArray[][colSize], rowSize, colSize, &newRowSize, &newColSize, hcrop1, hcrop2, vcrop1, vcrop2);
     }
 
     else{
       printf("\nError: invalid option\n");
     }
- 
   }
 
+	    
   else if(userschoice = '2'){
-  // display image
+	// display image
   }
 
+	  
   else if(userschoice = '1'){
-  // load image
+	// load image
+	  
+	// should return a 2D array to the int array 'imageArray' please
+	// should return the column and row sizes to the int variables called 'colSize' and 'rowSize' please
   }
+
+
+  // NOTE: All of these edits return 'newArray', and crop also returns 'newColSize' and 'newRowSize'
+  // Good to know for the 'save image' option
+	  
 
   else{
     printf("\nError: invalid option);
-    userschoice = 4;
+    userschoice = '4';
   }
 }
 while(userschoice != '4');   
