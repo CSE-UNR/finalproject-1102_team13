@@ -1,5 +1,5 @@
 //Authors: Uvensis Martinez, Kaitlyn Rouse
-//Date:
+//Date: may somthing
 //Purpose: Erinstagram <3
 
 //Insert comments: 
@@ -27,7 +27,8 @@ do{
   printf("[2]-Display Your Image\n");
   printf("[3]-Edit The Image\n");
   printf("[4]-Exit\n");
-  scanf(" %c", &userschoice);
+  printf("Please select a number from the brackets\n");
+  scanf("%c", &userschoice);
 
   if(userschoice ='4'){
     printf("\nThank you for choosing Erinstagram\n");
@@ -87,7 +88,7 @@ do{
   else{
     printf("\nError: invalid option");
     userschoice = '4';
-  }
+  };
 }
 while(userschoice != '4');   
 
