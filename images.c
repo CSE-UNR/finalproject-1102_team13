@@ -13,7 +13,8 @@ void Brighten(int(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int);
 void Crop(int(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int, int*, int*, int, int, int, int);
 void getCropNums(int(*)[MAXSIZE], int, int, int*, int*, int*, int*);
 
-
+void LoadImage(int imageArray[][MAXSIZE], int *rowPtr, int *colSizePtr);
+void DisplayImage(int imageArray[][MAXSIZE], int rowSize, int colSize);
 
 int main(){
 	
@@ -70,12 +71,13 @@ do{
 	    
   else if(userschoice = '2'){
 	// display image
+	DisplayImage(imageArray, rowSize, colSize);
   }
 
 	  
   else if(userschoice = '1'){
 	// load image
-	  
+	  LoadImage(imageArray, &rowSize, &colSize);
 	// should return a 2D array to the int array 'imageArray' please
 	// should return the column and row sizes to the int variables called 'colSize' and 'rowSize' please
   }
@@ -86,7 +88,7 @@ do{
 	  
 
   else{
-    printf("\nError: invalid option");
+    printf("\nError: Please use a number that asociates with your choice");
     userschoice = '4';
   };
 }
@@ -96,6 +98,42 @@ while(userschoice != '4');
 return 0;
 }
 
+void LoadImage(int imageArray[][MAXSIZE], int *rowSizePtr, int *colSizePtr) {
+    	FILE *file = fopen("image.txt", "r"); // Open the file for reading
+
+    	if (file == NULL) {
+        printf("Error: I can't open your file\n");
+        return;
+    	}
+
+    	// Read the row and column sizes from the file
+    	fscanf(file, "%d %d", rowSizePtr, colSizePtr);
+
+    	// Read pixel values into the image array
+    	for (int i = 0; i < *rowSizePtr; i++) {
+       	 for (int j = 0; j < *colSizePtr; j++) {
+            fscanf(file, "%d", &imageArray[i][j]);
+       	 }
+   	 }
+
+    // Close the file
+    fclose(file);
+
+    printf("I loaded it successfully.\n");
+}
+
+void DisplayImage(int imageArray[][MAXSIZE], int rowSize, int colSize) {
+    
+    for (int i = 0; i < rowSize; i++) {
+        
+        for (int j = 0; j < colSize; j++) {
+            
+            printf(" %d ", imageArray[i][j]);
+        }
+       
+        printf("\n");
+    }
+}
 
 void getCropNums(int imageArray[][MAXSIZE], int rowSize, int colSize, int *hcrop1Ptr, int *hcrop2Ptr, int *vcrop1Ptr, int *vcrop2Ptr){
 	int hcrop1, hcrop2, vcrop1, vcrop2;
