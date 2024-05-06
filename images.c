@@ -23,21 +23,22 @@ int imageArray[MAXSIZE][MAXSIZE];
 int colSize, rowSize;
 
 do{
+  userschoice = '0';
   printf("\nWelcome to Erinstagram\n");
   printf("[1]-Load Your Image\n");
   printf("[2]-Display Your Image\n");
   printf("[3]-Edit The Image\n");
   printf("[4]-Exit\n");
-  printf("Please select a number from the brackets\n");
+  printf("Please select a number from the brackets: ");
   scanf("%c", &userschoice);
 
-  if(userschoice ='4'){
+  if(userschoice == '4'){
     printf("\nThank you for choosing Erinstagram\n");
     printf("\nGoodbye!\n");
   }
 
 
-  else if(userschoice = '3'){
+  else if(userschoice == '3'){
   // edit image'
     
     int newArray[MAXSIZE][MAXSIZE];
@@ -45,12 +46,12 @@ do{
     printf("\nChoose an option:\n[1] Brighten your image\n[2] Dim your image\n[3] crop your image\n\nEnter your option: ");
     scanf(" %c", &userschoice2);
    
-    if(userschoice2 = '1'){
+    if(userschoice2 == '1'){
 	// brighten
 	Brighten(imageArray, &newArray, rowSize, colSize);
     }
       
-    else if(userschoice2 = '2'){
+    else if(userschoice2 == '2'){
 	// dim
 	Dim(imageArray, &newArray, rowSize, colSize);
     }
@@ -69,13 +70,13 @@ do{
   }
 
 	    
-  else if(userschoice = '2'){
+  else if(userschoice == '2'){
 	// display image
 	DisplayImage(imageArray, rowSize, colSize);
   }
 
 	  
-  else if(userschoice = '1'){
+  else if(userschoice == '1'){
 	// load image
 	  LoadImage(imageArray, &rowSize, &colSize);
 	// should return a 2D array to the int array 'imageArray' please
@@ -86,11 +87,6 @@ do{
   // NOTE: All of these edits return 'newArray', and crop also returns 'newColSize' and 'newRowSize'
   // Good to know for the 'save image' option
 	  
-
-  else{
-    printf("\nError: Please use a number that asociates with your choice");
-    userschoice = '4';
-  };
 }
 while(userschoice != '4');   
 
