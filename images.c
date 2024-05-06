@@ -32,7 +32,7 @@ do{
   printf("Please select a number from the brackets: ");
   scanf("%c", &userschoice);
 
-  if(userschoice == '4'){
+
     printf("\nThank you for choosing Erinstagram\n");
     printf("\nGoodbye!\n");
   }
