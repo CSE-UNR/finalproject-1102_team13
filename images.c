@@ -1,5 +1,5 @@
 //Authors: Uvensis Martinez, Kaitlyn Rouse
-//Date: 5/7/2024
+//Date: may somthing
 //Purpose: Erinstagram <3
 
 //Insert comments: //
@@ -21,6 +21,7 @@ int main(){
 char userschoice, userschoice2, userschoice3;
 
 int colSize = 0, rowSize = 0;
+int newRowSize = 0, newColSize = 0;
 char imageArray[MAXSIZE][MAXSIZE];
 char userfilename[100];
 
@@ -66,7 +67,7 @@ do{
 
     else if(userschoice2 == '3'){
 	// crop
-	int hcrop1, hcrop2, vcrop1, vcrop2, newRowSize, newColSize;
+	int hcrop1, hcrop2, vcrop1, vcrop2;
 	int newArray[rowSize][colSize];
 	getCropNums(imageArray, rowSize, colSize, &hcrop1, &hcrop2, &vcrop1, &vcrop2);
 	Crop(imageArray, newArray, rowSize, colSize, &newRowSize, &newColSize, hcrop1, hcrop2, vcrop1, vcrop2);
@@ -89,9 +90,13 @@ do{
     		printf("\nError: could not open file %s\n", outputfilename);
     	}
     	else {
+    	   if(userschoice2 == '3'){
+    	   	rowSize = newRowSize;
+    	   	colSize = newColSize;
+    	   }
     	   for (int i = 0; i < colSize; i++) {
         	for (int j = 0; j < rowSize; j++) {
-        	    fprintf(file, "%c", imageArray[i][j]);
+        	    fprintf(file, "%c", newArray[i][j]);
        		}
         	fprintf(file, "\n");
            }
@@ -106,10 +111,6 @@ do{
     printf("\nThank you for choosing Erinstagram\n");
     printf("\nGoodbye!\n");
   }
-	// should return a 2D array to the int array 'imageArray' please
-	// should return the column and row sizes to the int variables called 'colSize' and 'rowSize' please
-  // NOTE: All of these edits return 'newArray', and crop also returns 'newColSize' and 'newRowSize'
-  // Good to know for the 'save image' option
 	  
 }while(userschoice != '4');   
 
@@ -130,21 +131,24 @@ void LoadImage(char imageArray[][MAXSIZE], int *rowSizePtr, int *colSizePtr) {
     else{
     	int col_i = 0;
     	int row_i = 0;
+    	int row_size = 0;
     	char value;
     	printf("Successfully opened file %s\n", userfileName);
     
-    	while(fscanf(file, " %c", &value) == 1){
+    	while(fscanf(file, "%c", &value) == 1){
     		fscanf(file, "%c", &value);
     		if(value == '\n'){
     			col_i++;
+    			row_i = 0;
     		}
     		else{
     			fscanf(file, "%c", &value);
     			imageArray[row_i][col_i] = value;
     			row_i++;
+    			row_size++;
     		}
         }
-        *rowSizePtr = row_i;
+        *rowSizePtr = row_size;
         *colSizePtr = col_i;
         printf("row size: %d\ncol size: %d\n", row_i, col_i);
     }
@@ -163,10 +167,10 @@ void DisplayImage(char imageArray[][MAXSIZE], int rowSize, int colSize) {
     char brightnessMap[] = {' ', '.', 'o', 'O', '0'};
     
     printf("row size: %d\ncol size: %d\n", rowSize, colSize);
-    
+       
     for (int i = 0; i < colSize; i++) {
         for (int j = 0; j < rowSize; j++) {
-        	printf("%c", imageArray[i][j]);
+        	printf("%c", brightnessMap[imageArray[i][j]]);
         }
         printf("\n");
     }
