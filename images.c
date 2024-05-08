@@ -8,20 +8,20 @@
 
 #define MAXSIZE 500
 
-void Dim(int(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int);
-void Brighten(int(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int);
-void Crop(int(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int, int*, int*, int, int, int, int);
-void getCropNums(int(*)[MAXSIZE], int, int, int*, int*, int*, int*);
+void Dim(char imageArray[][MAXSIZE], int newArray[MAXSIZE][MAXSIZE], int rowSize, int colSize);
+void Brighten(char imageArray[][MAXSIZE], int newArray[MAXSIZE][MAXSIZE], int rowSize, int colSize);
+void Crop(char(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int, int*, int*, int, int, int, int);
+void getCropNums(char(*)[MAXSIZE], int, int, int*, int*, int*, int*);
 
-void LoadImage(int imageArray[][MAXSIZE], int rowPtr, int colSizePtr);
-void DisplayImage(int imageArray[][MAXSIZE], int rowSize, int colSize);
+void LoadImage(char imageArray[][MAXSIZE], int* rowPtr, int* colSizePtr);
+void DisplayImage(char imageArray[][MAXSIZE], int rowSize, int colSize);
 
 int main(){
 	
 char userschoice, userschoice2;
 
-int colSize = 24, rowSize =12;
-int imageArray[rowSize][colSize];
+int colSize = 0, rowSize = 0;
+char imageArray[MAXSIZE][MAXSIZE];
 char userfilename[100];
 
 do{
@@ -36,7 +36,7 @@ do{
   
   if(userschoice == '1'){
 	// load image
-	  LoadImage(imageArray, rowSize, colSize);
+	  LoadImage(imageArray, &rowSize, &colSize);
 	// should return a 2D array to the int array 'imageArray' please
 	// should return the column and row sizes to the int variables called 'colSize' and 'rowSize' please
   }
@@ -56,12 +56,12 @@ do{
    
     if(userschoice2 == '1'){
 	// brighten
-	Brighten(imageArray, &newArray, rowSize, colSize);
+	Brighten(imageArray, newArray, rowSize, colSize);
     }
       
     else if(userschoice2 == '2'){
 	// dim
-	Dim(imageArray, &newArray, rowSize, colSize);
+	Dim(imageArray, newArray, rowSize, colSize);
     }
 
     else if(userschoice2 == '3'){
@@ -91,7 +91,7 @@ do{
 
 return 0;}
 
-void LoadImage(int imageArray[][MAXSIZE], int rowSizePtr, int colSizePtr) {
+void LoadImage(char imageArray[][MAXSIZE], int *rowSizePtr, int *colSizePtr) {
     char userfileName[100]; // Declare userfileName to pick names
     
     printf("\nEnter the name of the image file:\n");
@@ -103,14 +103,26 @@ void LoadImage(int imageArray[][MAXSIZE], int rowSizePtr, int colSizePtr) {
         printf("Error: Could not open the file %s\n", userfileName);
         return;
     }
-
-    for (int i = 0; i < rowSizePtr; i++) {
-        for (int j = 0; j < colSizePtr; j++) {
-            char face;
-            fscanf(file, " %c", &face); // Read a character from the file. the face values
-            imageArray[i][j] = (face == '4') ? 0 : 1; // Assuming '4' represents the brightest part of the image
-
+    else{
+    	int col_i = 0;
+    	int row_i = 0;
+    	char value;
+    	printf("Successfully opened file %s\n", userfileName);
+    
+    	while(fscanf(file, "%c", &value) == 1){
+    		fscanf(file, "%c", &value);
+    		if(value == '\n'){
+    			col_i++;
+    		}
+    		else{
+    			fscanf(file, "%c", &value);
+    			imageArray[row_i][col_i] = value;
+    			row_i++;
+    		}
         }
+        *rowSizePtr = row_i;
+        *colSizePtr = col_i;
+        printf("row size: %d\ncol size: %d\n", row_i, col_i);
     }
 
     // Close the file
@@ -120,19 +132,20 @@ void LoadImage(int imageArray[][MAXSIZE], int rowSizePtr, int colSizePtr) {
 }
 
 
-void DisplayImage(int imageArray[][MAXSIZE], int rowSize, int colSize) {
+void DisplayImage(char imageArray[][MAXSIZE], int rowSize, int colSize) {
     char brightnessMap[] = {' ', '.', 'o', 'O', '0'};
+    
+    printf("row size: %d\ncol size: %d\n", rowSize, colSize);
     
     for (int i = 0; i < rowSize; i++) {
         for (int j = 0; j < colSize; j++) {
-            printf("%c ", brightnessMap[imageArray[i][j]]);
+        	printf("%c", brightnessMap[imageArray[i][j]]);
         }
-        printf("\n");
     }
 }
 
 
-void getCropNums(int imageArray[][MAXSIZE], int rowSize, int colSize, int *hcrop1Ptr, int *hcrop2Ptr, int *vcrop1Ptr, int *vcrop2Ptr){
+void getCropNums(char imageArray[][MAXSIZE], int rowSize, int colSize, int *hcrop1Ptr, int *hcrop2Ptr, int *vcrop1Ptr, int *vcrop2Ptr){
 	int hcrop1, hcrop2, vcrop1, vcrop2;
 	do{
 		printf("\nFor the horizontal crop, enter the numbers corresponding to the sections you want to crop off. If you don't want to crop horizontally, just enter 0 and %d", rowSize+1);
@@ -177,7 +190,7 @@ void getCropNums(int imageArray[][MAXSIZE], int rowSize, int colSize, int *hcrop
 
 
 
-void Dim(int imageArray[][MAXSIZE], int (*newArrayPtr)[MAXSIZE][MAXSIZE], int rowSize, int colSize){
+void Dim(char imageArray[][MAXSIZE], int newArray[MAXSIZE][MAXSIZE], int rowSize, int colSize){
 
 	for(int row_i = 0; row_i < rowSize; row_i++){
 		for(int col_i = 0; col_i < colSize; col_i++){
@@ -185,13 +198,13 @@ void Dim(int imageArray[][MAXSIZE], int (*newArrayPtr)[MAXSIZE][MAXSIZE], int ro
 			if(new_brightness < 0){
 				new_brightness = 0;
 			}
-			*newArrayPtr[row_i][col_i] = new_brightness;
+			newArray[row_i][col_i] = new_brightness;
 		}
 	}
 
 }
 
-void Brighten(int imageArray[][MAXSIZE], int (*newArrayPtr)[MAXSIZE][MAXSIZE], int rowSize, int colSize){
+void Brighten(char imageArray[][MAXSIZE], int newArray[MAXSIZE][MAXSIZE], int rowSize, int colSize){
 
 	for(int row_i = 0; row_i < rowSize; row_i++){
 		for(int col_i = 0; col_i < colSize; col_i++){
@@ -199,13 +212,13 @@ void Brighten(int imageArray[][MAXSIZE], int (*newArrayPtr)[MAXSIZE][MAXSIZE], i
 			if(new_brightness > 4){
 				new_brightness = 4;
 			}
-			*newArrayPtr[row_i][col_i] = new_brightness;
+			newArray[row_i][col_i] = new_brightness;
 		}
 	}
 
 }
 
-void Crop(int imageArray[][MAXSIZE], int (*newArrayPtr)[MAXSIZE][MAXSIZE], int rowSize, int colSize, int *newRowSizePtr, int *newColSizePtr, int h1, int h2, int v1, int v2){
+void Crop(char imageArray[][MAXSIZE], int (*newArrayPtr)[MAXSIZE][MAXSIZE], int rowSize, int colSize, int *newRowSizePtr, int *newColSizePtr, int h1, int h2, int v1, int v2){
 	// h1 and h2 = horizontal locations to crop. h1 is the smaller int
 	// v1 and v2 = vertical locations to crop. v1 is the smaller int
 	
