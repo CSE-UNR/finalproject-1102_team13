@@ -20,7 +20,7 @@ int main(){
 	
 char userschoice, userschoice2;
 
-int colSize = 12, rowSize =24;
+int colSize = 24, rowSize =12;
 int imageArray[rowSize][colSize];
 char userfilename[100];
 
@@ -92,10 +92,10 @@ do{
 return 0;}
 
 void LoadImage(int imageArray[][MAXSIZE], int rowSizePtr, int colSizePtr) {
-    char userfileName[100]; // Declare userfileName here
+    char userfileName[100]; // Declare userfileName to pick names
     
     printf("\nEnter the name of the image file:\n");
-    scanf(" %s", userfileName); // Read the filename from the user
+    scanf(" %s", userfileName); // user chooses
     
     FILE *file = fopen(userfileName, "r"); // Open the file for reading
 
@@ -104,11 +104,12 @@ void LoadImage(int imageArray[][MAXSIZE], int rowSizePtr, int colSizePtr) {
         return;
     }
 
-    for (int i = 0 ; i < rowSizePtr; i++) {
+    for (int i = 0; i < rowSizePtr; i++) {
         for (int j = 0; j < colSizePtr; j++) {
             char face;
-            fscanf(file, " %c", &face); // Read a character from the file
-            imageArray[i][j] = (face == '0') ? 1 : 0; // Convert the character to an integer
+            fscanf(file, " %c", &face); // Read a character from the file. the face values
+            imageArray[i][j] = (face == '4') ? 0 : 1; // Assuming '4' represents the brightest part of the image
+
         }
     }
 
@@ -118,12 +119,13 @@ void LoadImage(int imageArray[][MAXSIZE], int rowSizePtr, int colSizePtr) {
     printf("\nImage loaded successfully from %s.\n", userfileName);
 }
 
+
 void DisplayImage(int imageArray[][MAXSIZE], int rowSize, int colSize) {
-    char brightnessMap[] = {' ', '.', 'o', 'O', '0'}; // Define a mapping from numerical values to characters
+    char brightnessMap[] = {' ', '.', 'o', 'O', '0'};
     
     for (int i = 0; i < rowSize; i++) {
         for (int j = 0; j < colSize; j++) {
-            printf("%c ", brightnessMap[imageArray[i][j]]); // Print the corresponding character for each pixel
+            printf("%c ", brightnessMap[imageArray[i][j]]);
         }
         printf("\n");
     }
