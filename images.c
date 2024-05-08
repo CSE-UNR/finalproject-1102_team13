@@ -2,7 +2,7 @@
 //Date: may somthing
 //Purpose: Erinstagram <3
 
-//Insert comments: 
+//Insert comments: //
 
 #include<stdio.h>
 
@@ -13,30 +13,38 @@ void Brighten(int(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int);
 void Crop(int(*)[MAXSIZE], int(*)[MAXSIZE][MAXSIZE], int, int, int*, int*, int, int, int, int);
 void getCropNums(int(*)[MAXSIZE], int, int, int*, int*, int*, int*);
 
-void LoadImage(int imageArray[][MAXSIZE], int *rowPtr, int *colSizePtr);
+void LoadImage(int imageArray[][MAXSIZE], int rowPtr, int colSizePtr);
 void DisplayImage(int imageArray[][MAXSIZE], int rowSize, int colSize);
 
 int main(){
 	
 char userschoice, userschoice2;
-int imageArray[MAXSIZE][MAXSIZE];
-int colSize, rowSize;
+
+int colSize = 12, rowSize =24;
+int imageArray[rowSize][colSize];
+char userfilename[100];
 
 do{
-  userschoice = '0';
+  
   printf("\nWelcome to Erinstagram\n");
   printf("[1]-Load Your Image\n");
   printf("[2]-Display Your Image\n");
   printf("[3]-Edit The Image\n");
   printf("[4]-Exit\n");
   printf("Please select a number from the brackets: ");
-  scanf("%c", &userschoice);
-
-
-    printf("\nThank you for choosing Erinstagram\n");
-    printf("\nGoodbye!\n");
+  scanf(" %c", &userschoice);
+  
+  if(userschoice == '1'){
+	// load image
+	  LoadImage(imageArray, rowSize, colSize);
+	// should return a 2D array to the int array 'imageArray' please
+	// should return the column and row sizes to the int variables called 'colSize' and 'rowSize' please
   }
-
+  
+  else if(userschoice == '2'){
+	// display image
+	DisplayImage(imageArray, rowSize, colSize);
+  }
 
   else if(userschoice == '3'){
   // edit image'
@@ -56,7 +64,7 @@ do{
 	Dim(imageArray, &newArray, rowSize, colSize);
     }
 
-    else if(userschoice2 = '3'){
+    else if(userschoice2 == '3'){
 	// crop
 	int hcrop1, hcrop2, vcrop1, vcrop2, newRowSize, newColSize;
 	int newArray[rowSize][colSize];
@@ -68,68 +76,59 @@ do{
       printf("\nError: invalid option\n");
     }
   }
-
-	    
-  else if(userschoice == '2'){
-	// display image
-	DisplayImage(imageArray, rowSize, colSize);
+  
+//Choice 4
+  else if(userschoice == '4'){
+    printf("\nThank you for choosing Erinstagram\n");
+    printf("\nGoodbye!\n");
   }
-
-	  
-  else if(userschoice == '1'){
-	// load image
-	  LoadImage(imageArray, &rowSize, &colSize);
 	// should return a 2D array to the int array 'imageArray' please
 	// should return the column and row sizes to the int variables called 'colSize' and 'rowSize' please
-  }
-
-
   // NOTE: All of these edits return 'newArray', and crop also returns 'newColSize' and 'newRowSize'
   // Good to know for the 'save image' option
 	  
-}
-while(userschoice != '4');   
+}while(userschoice != '4');   
 
+return 0;}
 
-return 0;
-}
+void LoadImage(int imageArray[][MAXSIZE], int rowSizePtr, int colSizePtr) {
+    char userfileName[100]; // Declare userfileName here
+    
+    printf("\nEnter the name of the image file:\n");
+    scanf(" %s", userfileName); // Read the filename from the user
+    
+    FILE *file = fopen(userfileName, "r"); // Open the file for reading
 
-void LoadImage(int imageArray[][MAXSIZE], int *rowSizePtr, int *colSizePtr) {
-    	FILE *file = fopen("image.txt", "r"); // Open the file for reading
-
-    	if (file == NULL) {
-        printf("Error: I can't open your file\n");
+    if (file == NULL) {
+        printf("Error: Could not open the file %s\n", userfileName);
         return;
-    	}
+    }
 
-    	// Read the row and column sizes from the file
-    	fscanf(file, "%d %d", rowSizePtr, colSizePtr);
-
-    	// Read pixel values into the image array
-    	for (int i = 0; i < *rowSizePtr; i++) {
-       	 for (int j = 0; j < *colSizePtr; j++) {
-            fscanf(file, "%d", &imageArray[i][j]);
-       	 }
-   	 }
+    for (int i = 0 ; i < rowSizePtr; i++) {
+        for (int j = 0; j < colSizePtr; j++) {
+            char face;
+            fscanf(file, " %c", &face); // Read a character from the file
+            imageArray[i][j] = (face == '0') ? 1 : 0; // Convert the character to an integer
+        }
+    }
 
     // Close the file
     fclose(file);
 
-    printf("I loaded it successfully.\n");
+    printf("\nImage loaded successfully from %s.\n", userfileName);
 }
 
 void DisplayImage(int imageArray[][MAXSIZE], int rowSize, int colSize) {
+    char brightnessMap[] = {' ', '.', 'o', 'O', '0'}; // Define a mapping from numerical values to characters
     
     for (int i = 0; i < rowSize; i++) {
-        
         for (int j = 0; j < colSize; j++) {
-            
-            printf(" %d ", imageArray[i][j]);
+            printf("%c ", brightnessMap[imageArray[i][j]]); // Print the corresponding character for each pixel
         }
-       
         printf("\n");
     }
 }
+
 
 void getCropNums(int imageArray[][MAXSIZE], int rowSize, int colSize, int *hcrop1Ptr, int *hcrop2Ptr, int *vcrop1Ptr, int *vcrop2Ptr){
 	int hcrop1, hcrop2, vcrop1, vcrop2;
