@@ -1,10 +1,10 @@
 //Authors: Uvensis Martinez, Kaitlyn Rouse
-//Date: may somthing
+//Date: 5/7/2024
 //Purpose: Erinstagram <3
 
 //Insert comments: //
 
-#include<stdio.h>
+#include <stdio.h>
 
 #define MAXSIZE 500
 
@@ -38,8 +38,7 @@ do{
   if(userschoice == '1'){
 	// load image
 	  LoadImage(imageArray, &rowSize, &colSize);
-	// should return a 2D array to the int array 'imageArray' please
-	// should return the column and row sizes to the int variables called 'colSize' and 'rowSize' please
+	
   }
   
   else if(userschoice == '2'){
@@ -47,8 +46,10 @@ do{
 	DisplayImage(imageArray, rowSize, colSize);
   }
 
+
+
   else if(userschoice == '3'){
-  // edit image'
+  	// edit image
     
     int newArray[MAXSIZE][MAXSIZE];
     
@@ -76,6 +77,7 @@ do{
     else{
       printf("\nError: invalid option\n");
     }
+    
     
     // saving image
     printf("\nWould you like to save your edited image to a new file?\n[1] Yes\n[2] No\n\nEnter your choice: ");
@@ -105,6 +107,8 @@ do{
     	}	
     }
     }  
+    
+  
   
 //Choice 4
   else if(userschoice == '4'){
@@ -114,7 +118,8 @@ do{
 	  
 }while(userschoice != '4');   
 
-return 0;}
+return 0;
+}
 
 void LoadImage(char imageArray[][MAXSIZE], int *rowSizePtr, int *colSizePtr) {
     char userfileName[100]; // Declare userfileName to pick names
@@ -150,7 +155,7 @@ void LoadImage(char imageArray[][MAXSIZE], int *rowSizePtr, int *colSizePtr) {
         }
         *rowSizePtr = row_size;
         *colSizePtr = col_i;
-        printf("row size: %d\ncol size: %d\n", row_i, col_i);
+        printf("row size: %d\ncol size: %d\n", row_size, col_i);
     }
 
     // Close the file
